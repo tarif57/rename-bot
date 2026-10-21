@@ -3,19 +3,15 @@ import threading
 from flask import Flask
 from pyrogram import Client, filters
 
-# এখানে আপনার টেলিগ্রামের বট টোকেন বসাতে হবে
-API_ID = 1234567  # আপনার my.telegram.org থেকে নেওয়া api_id বসাবেন
-API_HASH = "your_api_hash"  # আপনার api_hash বসাবেন
-BOT_TOKEN = "your_bot_token_here"  # BotFather থেকে পাওয়া টোকেনটি এখানে বসাবেন
-
+# সরাসরি আপনার আসল তথ্যগুলো এখানে বসিয়ে দিন:
 app = Client(
     "RenameBot",
     api_id=24324625,
     api_hash="9d95e42aadb33ab0ef1ba72940e5cfc4",
-    bot_token="7610831016:AAFf86BmlnyQCrntXpDta93QEtOcBV6gGGI"
+    bot_token="7610831016:AAFF86BmlnyQCrntXpDta93QEtOcBV6gGGI"
 )
 
-# রেন্ডার যেন বটকে ঘুম পাড়াতে না পারে, সেজন্য ছোট একটি ওয়েব সার্ভার
+# রেন্ডার যেন বটকে ঘুম পাড়াতে না পারে, সেজন্য ছোট একটি ওয়েব সার্ভার
 web_app = Flask(__name__)
 
 @web_app.route('/')
@@ -34,6 +30,6 @@ if __name__ == "__main__":
     # ওয়েব সার্ভার ব্যাকগ্রাউন্ডে চালু করা
     t = threading.Thread(target=run_web_server)
     t.start()
-    
+
     # বট চালু করা
     app.run()
