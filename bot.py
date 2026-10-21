@@ -8,7 +8,7 @@ app = Client(
     "RenameBot",
     api_id=24324625,
     api_hash="9d95e42aadb33ab0ef1ba72940e5cfc4",
-    bot_token="7610831016:AAFF86BmlnyQCrntXpDta93QEtOcBV6gGGI"
+    bot_token="8632768909:AAHnsxG7cT2owhPgdO7uruvRClioIU-Vtws"
 )
 
 # রেন্ডার ফ্রি টিয়ার সজাগ রাখার জন্য aiohttp ওয়েব সার্ভার
