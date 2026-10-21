@@ -3,7 +3,7 @@ import threading
 from flask import Flask
 from pyrogram import Client, filters
 
-# সরাসরি আপনার আসল তথ্যগুলো এখানে বসিয়ে দিন:
+# বট ক্লায়েন্ট ইনিশিয়ালাইজেশন
 app = Client(
     "RenameBot",
     api_id=24324625,
@@ -11,7 +11,7 @@ app = Client(
     bot_token="7610831016:AAFF86BmlnyQCrntXpDta93QEtOcBV6gGGI"
 )
 
-# রেন্ডার যেন বটকে ঘুম পাড়াতে না পারে, সেজন্য ছোট একটি ওয়েব সার্ভার
+# রেন্ডার যেন সজাগ থাকে, তার জন্য ছোট ওয়েব সার্ভার
 web_app = Flask(__name__)
 
 @web_app.route('/')
@@ -21,15 +21,16 @@ def home():
 def run_web_server():
     web_app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
 
-# বটের ফাইল রিনেম করার কাজ
+# ফাইল বা ভিডিও মেসেজ আসলে হ্যান্ডেল করার কাজ
 @app.on_message(filters.document | filters.video)
 async def rename_handler(client, message):
     await message.reply_text("আপনার ফাইলটি পেয়েছি! এখন নতুন নাম পাঠান:")
 
 if __name__ == "__main__":
-    # ওয়েব সার্ভার ব্যাকগ্রাউন্ডে চালু করা
-    t = threading.Thread(target=run_web_server)
-    t.start()
+    # ব্যাকগ্রাউন্ডে ফ্লাস্ক সার্ভার চালু রাখা
+    server_thread = threading.Thread(target=run_web_server)
+    server_thread.daemon = True
+    server_thread.start()
 
-    # বট চালু করা
+    # পাইথনের নতুন ভার্সনের জন্য সঠিক নিয়মে বট স্টার্ট করা
     app.run()
