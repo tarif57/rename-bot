@@ -1,8 +1,9 @@
 import os
-from aiohttp import web
+import asyncio
+import threading
+from flask import Flask
 from pyrogram import Client, filters
 
-# বট ক্লায়েন্ট ইনিশিয়ালাইজেশন
 app = Client(
     "RenameBot",
     api_id=24324625,
@@ -10,32 +11,25 @@ app = Client(
     bot_token="7610831016:AAFF86BmlnyQCrntXpDta93QEtOcBV6gGGI"
 )
 
-# রেন্ডারকে সজাগ রাখার জন্য aiohttp দিয়ে হালকা ওয়েব সার্ভার (থ্রেডিং ঝামেলা মুক্ত)
-async def handle(request):
-    return web.Response(text="Bot is active!")
+web_app = Flask(__name__)
 
-async def web_server():
-    server = web.Application()
-    server.router.add_get("/", handle)
-    runner = web.AppRunner(server)
-    await runner.setup()
-    port = int(os.environ.get("PORT", 10000))
-    site = web.TCPSite(runner, "0.0.0.0", port)
-    await site.start()
+@web_app.route('/')
+def home():
+    return "Bot is active!"
 
-# ফাইল বা ভিডিও মেসেজ আসলে হ্যান্ডেল করার কাজ
+def run_web_server():
+    web_app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+
 @app.on_message(filters.document | filters.video)
 async def rename_handler(client, message):
     await message.reply_text("আপনার ফাইলটি পেয়েছি! এখন নতুন নাম পাঠান:")
 
-async def main():
-    # ওয়েব সার্ভার এবং টেলিগ্রাম বট একসাথে স্টার্ট করা
-    await web_server()
-    await app.start()
-    print("Bot and Web Server Started Successfully!")
-    # বট যেন বন্ধ না হয়ে সচল থাকে
-    await asyncio.Event().wait()
-
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    server_thread = threading.Thread(target=run_web_server)
+    server_thread.daemon = True
+    server_thread.start()
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(app.start())
+    print("Bot Started Successfully!")
+    asyncio.get_event_loop().run_forever()
