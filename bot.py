@@ -1,5 +1,4 @@
 import os
-import asyncio
 import threading
 from flask import Flask
 from pyrogram import Client, filters
@@ -29,7 +28,4 @@ if __name__ == "__main__":
     server_thread.daemon = True
     server_thread.start()
 
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(app.start())
-    print("Bot Started Successfully!")
-    asyncio.get_event_loop().run_forever()
+    app.run()
